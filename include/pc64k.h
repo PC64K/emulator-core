@@ -1,4 +1,5 @@
 #pragma once
+#include <pc64k/video.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +18,7 @@ typedef struct {
     uint16_t pc;
     uint8_t reg[16];
     uint8_t ram[65536];
-    uint8_t display[320][192];
+    PC64KVideoCtx video;
     uint8_t stack_pos;
     uint16_t stack[128];
     uint8_t custom_font[256][16];
@@ -34,3 +35,5 @@ PC64K* pc64k_alloc_init(uint8_t* rom, size_t rom_size,
     PC64KDiskWriter cb_disk_write,
     PC64KMicrosGetter cb_micros);
 void pc64k_deinit_free(PC64K* ctx);
+
+void pc64k_tick(PC64K* ctx);

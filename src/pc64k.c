@@ -18,7 +18,7 @@ PC64K* pc64k_alloc_init(uint8_t* rom, size_t rom_size,
     ctx->stack_pos = 0;
     ctx->pc = 0;
 
-    memset(ctx->display, 0, sizeof(ctx->display));
+    pc64k_video_init(&ctx->video);
     memset(ctx->reg, 0, sizeof(ctx->reg));
     memset(ctx->custom_font, 0, sizeof(ctx->custom_font));
 
@@ -26,4 +26,8 @@ PC64K* pc64k_alloc_init(uint8_t* rom, size_t rom_size,
 }
 void pc64k_deinit_free(PC64K* ctx) {
     free(ctx);
+}
+
+void pc64k_tick(PC64K* ctx) {
+    
 }
