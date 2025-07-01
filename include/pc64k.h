@@ -21,7 +21,6 @@ typedef struct {
     PC64KVideoCtx video;
     uint8_t stack_pos;
     uint16_t stack[128];
-    uint8_t custom_font[256][16];
 
     PC64KDiskSizeGetter cb_disk_size;
     PC64KDiskReader cb_disk_read;

@@ -1,0 +1,9 @@
+{
+    "dependencies": {
+        "pngjs": "latest"
+    },
+    "scripts": {
+        "start": "node font.js"
+    },
+    "type": "module"
+}
