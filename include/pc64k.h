@@ -20,6 +20,7 @@ typedef struct {
     uint8_t display[320][192];
     uint8_t stack_pos;
     uint16_t stack[128];
+    uint8_t custom_font[256][16];
 
     PC64KDiskSizeGetter cb_disk_size;
     PC64KDiskReader cb_disk_read;

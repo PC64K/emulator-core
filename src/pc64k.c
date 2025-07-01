@@ -20,6 +20,7 @@ PC64K* pc64k_alloc_init(uint8_t* rom, size_t rom_size,
 
     memset(ctx->display, 0, sizeof(ctx->display));
     memset(ctx->reg, 0, sizeof(ctx->reg));
+    memset(ctx->custom_font, 0, sizeof(ctx->custom_font));
 
     return ctx;
 }
