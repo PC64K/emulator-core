@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <string.h>
 
 typedef struct {
     uint8_t framebuffer[320][192];
