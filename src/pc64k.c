@@ -211,7 +211,7 @@ void pc64k_tick(PC64K* ctx) {
         uint8_t key = read_char(ctx);
         uint16_t addr = read_word(ctx);
         if(pc64k_getkey(ctx, key)) ctx->pc = addr;
-    } else if(opcode == 0x20) { // TODO: keyboard
+    } else if(opcode == 0x20) {
         PC64KFourBitPair pair = read_four_bit_pair(ctx);
         ctx->video.fg_color = ctx->reg[pair.x];
         ctx->video.bg_color = ctx->reg[pair.y];
