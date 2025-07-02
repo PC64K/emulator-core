@@ -19,7 +19,7 @@ static void pc64k_draw_character(PC64KVideoCtx* context, PC64KCharacter characte
     for(uint16_t cx = sx; cx < sx + CHAR_WIDTH; cx++)
         for(uint16_t cy = sy; cy < sy + CHAR_HEIGHT; cy++)
             context->framebuffer[cx][cy] =
-                (((character.font == 0 ? system_font : context->custom_font)[character.character][cy - sy] >> (cx - sx)) & 1)
+                (((character.font == 0 ? system_font : context->custom_font)[character.character][cy - sy] >> (7 - cx + sx)) & 1)
                 ? context->fg_color
                 : context->bg_color;
 }
