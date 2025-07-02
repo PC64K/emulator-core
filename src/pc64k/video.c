@@ -4,13 +4,9 @@
 void pc64k_video_init(PC64KVideoCtx* context) {
     context->bg_color = 0b00000011;
     context->fg_color = 0b11111111;
-
-    memset(context->framebuffer, context->bg_color, sizeof(context->framebuffer));
-    memset(context->characters, 0, sizeof(context->characters));
     memset(context->custom_font, 0, sizeof(context->custom_font));
 
-    context->character_x = 0;
-    context->character_y = 0;
+    pc64k_video_clear(context);
 }
 
 static void pc64k_draw_character(PC64KVideoCtx* context, PC64KCharacter character, uint8_t x, uint8_t y) {
@@ -59,4 +55,11 @@ void pc64k_video_print(PC64KVideoCtx* context, PC64KCharacter character) {
             context->character_x = 0;
         }
     }
+}
+void pc64k_video_clear(PC64KVideoCtx* context) {
+    memset(context->framebuffer, context->bg_color, sizeof(context->framebuffer));
+    memset(context->characters, 0, sizeof(context->characters));
+
+    context->character_x = 0;
+    context->character_y = 0;
 }

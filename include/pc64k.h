@@ -6,8 +6,8 @@
 
 // Returns disk size
 typedef size_t(*PC64KDiskSizeGetter)();
-// Allocates memory for read data and reads data. Doesn't free memory.
-typedef uint8_t*(*PC64KDiskReader)(size_t pos, uint8_t len);
+// Reads data from disk.
+typedef void(*PC64KDiskReader)(size_t pos, uint8_t* data, uint8_t len);
 // Writes data to disk.
 typedef void(*PC64KDiskWriter)(size_t pos, uint8_t* data, uint8_t len);
 
