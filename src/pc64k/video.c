@@ -20,7 +20,7 @@ static void pc64k_draw_character(PC64KVideoCtx* context, PC64KCharacter characte
                 : context->bg_color;
 }
 
-static void pc64k_redraw(PC64KVideoCtx* context) {
+void pc64k_redraw(PC64KVideoCtx* context) {
     for(uint8_t x = 0; x < SCREEN_WIDTH; x++)
         for(uint8_t y = 0; y < SCREEN_HEIGHT; y++)
             pc64k_draw_character(context, context->characters[x][y], x, y);

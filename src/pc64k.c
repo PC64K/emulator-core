@@ -204,6 +204,7 @@ void pc64k_tick(PC64K* ctx) {
         PC64KFourBitPair pair = read_four_bit_pair(ctx);
         ctx->video.fg_color = ctx->reg[pair.x];
         ctx->video.bg_color = ctx->reg[pair.y];
+        pc64k_redraw(&ctx->video);
     } else if(opcode == 0x21)
         pc64k_video_clear(&ctx->video);
     else if(opcode == 0x22) {

@@ -30,5 +30,7 @@ typedef struct {
 
 void pc64k_video_init(PC64KVideoCtx* context);
 
+void pc64k_redraw(PC64KVideoCtx* context);
+
 void pc64k_video_print(PC64KVideoCtx* context, PC64KCharacter character);
 void pc64k_video_clear(PC64KVideoCtx* context);
