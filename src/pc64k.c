@@ -56,6 +56,13 @@ static PC64KFourBitPair read_four_bit_pair(PC64K* ctx) {
     if(ctx->reg[pair.x] sign ctx->reg[pair.y]) ctx->pc = addr;
 #define COMPARE_XNYYZZZZ(sign) if(ctx->reg[pair.x] sign val) ctx->pc = addr;
 
+void pc64k_setkey(PC64K* ctx, uint8_t key, bool down) {
+    if(down) ctx->keyboard[(key >> 3) & 0b11111] |= (1 << (key & 0b111));
+    else ctx->keyboard[(key >> 3) & 0b11111] &= ~(1 << (key & 0b111));
+}
+static bool pc64k_getkey(PC64K* ctx, uint8_t key) {
+    return (ctx->keyboard[(key >> 3) & 0b11111] >> (key & 0b111)) & 1;
+}
 void pc64k_tick(PC64K* ctx) {
     uint8_t opcode = read_char(ctx);
     if(opcode == 0x00)
@@ -200,6 +207,10 @@ void pc64k_tick(PC64K* ctx) {
     else if(opcode == 0x1e) {
         uint8_t index = read_char(ctx);
         memcpy(ctx->video.custom_font[index], &ctx->ram[read_word(ctx)], sizeof(ctx->video.custom_font[0]));
+    } else if(opcode == 0x1f) {
+        uint8_t key = read_char(ctx);
+        uint16_t addr = read_word(ctx);
+        if(pc64k_getkey(ctx, key)) ctx->pc = addr;
     } else if(opcode == 0x20) { // TODO: keyboard
         PC64KFourBitPair pair = read_four_bit_pair(ctx);
         ctx->video.fg_color = ctx->reg[pair.x];
@@ -223,5 +234,9 @@ void pc64k_tick(PC64K* ctx) {
             .font = pair.x == 0x0 ? 0 : 1,
             .character = ctx->reg[pair.y]
         });
-    }
+    } else if(opcode == 0x25) {
+        PC64KFourBitPair pair = read_four_bit_pair(ctx);
+        uint16_t addr = read_word(ctx);
+        if(pc64k_getkey(ctx, ctx->reg[pair.y])) ctx->pc = addr;
+    } 
 }

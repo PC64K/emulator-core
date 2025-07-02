@@ -21,6 +21,7 @@ typedef struct {
     PC64KVideoCtx video;
     uint8_t stack_pos;
     uint16_t stack[128];
+    uint8_t keyboard[32];
 
     PC64KDiskSizeGetter cb_disk_size;
     PC64KDiskReader cb_disk_read;
@@ -35,4 +36,5 @@ PC64K* pc64k_alloc_init(uint8_t* rom, size_t rom_size,
     PC64KMicrosGetter cb_micros);
 void pc64k_deinit_free(PC64K* ctx);
 
+void pc64k_setkey(PC64K* ctx, uint8_t key, bool down);
 void pc64k_tick(PC64K* ctx);
