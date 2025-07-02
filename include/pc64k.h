@@ -1,18 +1,10 @@
 #pragma once
 #include <pc64k/video.h>
+#include <pc64k/timers.h>
+#include <pc64k/callbacks.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
-// Returns disk size
-typedef size_t(*PC64KDiskSizeGetter)();
-// Reads data from disk.
-typedef void(*PC64KDiskReader)(size_t pos, uint8_t* data, uint8_t len);
-// Writes data to disk.
-typedef void(*PC64KDiskWriter)(size_t pos, uint8_t* data, uint8_t len);
-
-// Gets microseconds since an arbitrary point in time
-typedef uint64_t(*PC64KMicrosGetter)();
 
 typedef struct {
     uint16_t pc;
@@ -22,6 +14,9 @@ typedef struct {
     uint8_t stack_pos;
     uint16_t stack[128];
     uint8_t keyboard[32];
+
+    PC64KTimer delay;
+    PC64KTimer sound;
 
     PC64KDiskSizeGetter cb_disk_size;
     PC64KDiskReader cb_disk_read;

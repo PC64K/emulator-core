@@ -21,6 +21,9 @@ PC64K* pc64k_alloc_init(uint8_t* rom, size_t rom_size,
     pc64k_video_init(&ctx->video);
     memset(ctx->reg, 0, sizeof(ctx->reg));
 
+    pc64k_timer_init(&ctx->delay, cb_micros);
+    pc64k_timer_init(&ctx->sound, cb_micros);
+
     return ctx;
 }
 void pc64k_deinit_free(PC64K* ctx) {
@@ -64,6 +67,11 @@ static bool pc64k_getkey(PC64K* ctx, uint8_t key) {
     return (ctx->keyboard[(key >> 3) & 0b11111] >> (key & 0b111)) & 1;
 }
 void pc64k_tick(PC64K* ctx) {
+    // Timers
+    pc64k_timer_tick(&ctx->delay, ctx->cb_micros);
+    pc64k_timer_tick(&ctx->sound, ctx->cb_micros);
+
+    // Handling the opcode
     uint8_t opcode = read_char(ctx);
     if(opcode == 0x00)
         ctx->pc = read_word(ctx);
@@ -194,7 +202,25 @@ void pc64k_tick(PC64K* ctx) {
         if(pair.y == 0x3) { COMPARE_XNYYZZZZ(<) }
         if(pair.y == 0x4) { COMPARE_XNYYZZZZ(>=) }
         if(pair.y == 0x5) { COMPARE_XNYYZZZZ(<=) }
-    } else if(opcode == 0x1c) // TODO: timers
+    } else if(opcode == 0x1b) {
+        PC64KFourBitPair pair = read_four_bit_pair(ctx);
+        if(pair.x == 0x0)
+            ctx->delay.freq = ctx->reg[pair.y];
+        else if(pair.x == 0x1)
+            ctx->sound.freq = ctx->reg[pair.y];
+        else if(pair.x == 0x2)
+            ctx->delay.value = ctx->reg[pair.y];
+        else if(pair.x == 0x3)
+            ctx->sound.value = ctx->reg[pair.y];
+        else if(pair.x == 0x4 && pair.y == 0x0 && ctx->delay.value > 0)
+            ctx->pc -= 2; // Go back to the start of this opcode
+        else if(pair.x == 0x4 && pair.y == 0x1 && ctx->sound.value > 0)
+            ctx->pc -= 2;
+        else if(pair.x == 0x5)
+            ctx->reg[pair.y] = ctx->delay.value;
+        else if(pair.x == 0x6)
+            ctx->reg[pair.y] = ctx->sound.value;
+    } else if(opcode == 0x1c)
         pc64k_video_print(&ctx->video, (PC64KCharacter) {
             .font = 0,
             .character = read_char(ctx)
