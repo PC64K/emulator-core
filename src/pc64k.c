@@ -170,8 +170,9 @@ void pc64k_tick(PC64K* ctx) {
     } else if(opcode == 0x10)
         ctx->pc = ctx->stack[--ctx->stack_pos];
     else if(opcode == 0x11) {
+        uint16_t addr = read_word(ctx);
         ctx->stack[ctx->stack_pos++] = ctx->pc;
-        ctx->pc = read_word(ctx);
+        ctx->pc = addr;
     } else if(opcode == 0x12) {
         uint16_t val = ctx->stack[--ctx->stack_pos];
         uint16_t addr = read_word(ctx);
