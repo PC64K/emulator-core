@@ -5,7 +5,7 @@ PC64K* pc64k_alloc_init(uint8_t* rom, size_t rom_size,
     PC64KDiskReader cb_disk_read,
     PC64KDiskWriter cb_disk_write,
     PC64KMicrosGetter cb_micros) {
-    if(rom_size > 65535)
+    if(rom_size > 65536)
         return NULL;
     PC64K* ctx = (PC64K*) malloc(sizeof(PC64K));
     memcpy(ctx->ram, rom, rom_size);
