@@ -9,6 +9,8 @@
 typedef struct {
     uint16_t pc;
     uint8_t reg[16];
+    uint16_t ri;
+    uint16_t rj;
     uint8_t ram[65536];
     PC64KVideoCtx video;
     uint8_t stack_pos;

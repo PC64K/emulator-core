@@ -265,5 +265,33 @@ void pc64k_tick(PC64K* ctx) {
         PC64KFourBitPair pair = read_four_bit_pair(ctx);
         uint16_t addr = read_word(ctx);
         if(pc64k_getkey(ctx, ctx->reg[pair.y])) ctx->pc = addr;
-    } 
+    } else if(opcode == 0x26) {
+        uint16_t addr = read_word(ctx);
+        ctx->ri = addr;
+    } else if(opcode == 0x27) {
+        uint16_t addr = read_word(ctx);
+        ctx->rj = addr;
+    } else if(opcode == 0x28) {
+        PC64KFourBitPair pair = read_four_bit_pair(ctx);
+        ctx->ri = (ctx->reg[pair.x] << 8) | ctx->reg[pair.y];
+    } else if(opcode == 0x29) {
+        PC64KFourBitPair pair = read_four_bit_pair(ctx);
+        ctx->rj = (ctx->reg[pair.x] << 8) | ctx->reg[pair.y];
+    } else if(opcode == 0x2a) {
+        PC64KFourBitPair pair = read_four_bit_pair(ctx);
+        int32_t res = (pair.x == 0x0 ? ctx->ri : ctx->rj) + ctx->reg[pair.y];
+        ctx->reg[0xf] = res > 0xffff ? 1 : 0;
+        if(pair.x == 0x0) ctx->ri = res;
+        else ctx->rj = res;
+    } else if(opcode == 0x2b) {
+        PC64KFourBitPair pair = read_four_bit_pair(ctx);
+        int32_t res = (pair.x == 0x0 ? ctx->ri : ctx->rj) - ctx->reg[pair.y];
+        ctx->reg[0xf] = res < 0 ? 1 : 0;
+        if(pair.x == 0x0) ctx->ri = res;
+        else ctx->rj = res;
+    } else if(opcode == 0x2c) {
+        PC64KFourBitPair pair = read_four_bit_pair(ctx);
+        if(pair.x == 0x0) ctx->reg[pair.y] = ctx->ram[ctx->ri];
+        else ctx->cb_disk_read(ctx->rj, &ctx->reg[pair.y], 1);
+    }
 }
