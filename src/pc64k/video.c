@@ -40,12 +40,23 @@ static void pc64k_newline(PC64KVideoCtx* context) {
     } else context->character_y++;
 }
 
+static void pc64k_back(PC64KVideoCtx* context) {
+    if(context->character_x == 0 && context->character_y > 0) {
+        context->character_x = SCREEN_WIDTH;
+        context->character_y--;
+    }
+    if(context->character_x == 0 && context->character_y == 0) return;
+    context->character_x--;
+}
+
 void pc64k_video_print(PC64KVideoCtx* context, PC64KCharacter character) {
     if(character.character == '\r') {
         context->character_x = 0;
         return;
     } else if(character.character == '\n') {
         pc64k_newline(context);
+    } else if(character.character == '\b') {
+        pc64k_back(context);
     } else {
         context->characters[context->character_x][context->character_y] = character;
         pc64k_draw_character(context, character, context->character_x, context->character_y);
