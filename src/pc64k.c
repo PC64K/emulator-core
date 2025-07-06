@@ -292,6 +292,8 @@ void pc64k_tick(PC64K* ctx) {
     } else if(opcode == 0x2c) {
         PC64KFourBitPair pair = read_four_bit_pair(ctx);
         if(pair.x == 0x0) ctx->reg[pair.y] = ctx->ram[ctx->ri];
-        else ctx->cb_disk_read(ctx->rj, &ctx->reg[pair.y], 1);
+        else if(pair.x == 0x1) ctx->cb_disk_read(ctx->rj, &ctx->reg[pair.y], 1);
+        else if(pair.x == 0x2) ctx->ram[ctx->ri] = ctx->reg[pair.y];
+        else if(pair.x == 0x3) ctx->cb_disk_write(ctx->rj, &ctx->reg[pair.y], 1);
     }
 }
